@@ -12,39 +12,79 @@ import { GuardCard } from "./cards/GuardCard";
 import { SpyCard } from "./cards/SpyCard";
 
 export class Round {
-  player1: Player;
-  player2: Player;
+  players: Player[] = [];
   deck: Card[] = [];
+  discard: Card[] = [];
 
-  constructor(player1: Player, player2: Player) {
-    this.player1 = player1;
-    this.player2 = player2;
+  constructor() {
     this.addAllCards();
+    this.shuffleDeck();
+    this.addPlayer("J1");
+    this.addPlayer("J2");
   }
 
+  /**
+   * Add all the cards to the deck
+   */
   addAllCards() {
-    this.deck.push(
-      new PrincessCard(),
-      new CountessCard(),
-      new KingCard(),
-      new ChancellorCard(),
-      new ChancellorCard(),
-      new PrinceCard(),
-      new PrinceCard(),
-      new ServantCard(),
-      new ServantCard(),
-      new BaronCard(),
-      new BaronCard(),
-      new PriestCard(),
-      new PriestCard(),
-      new GuardCard(),
-      new GuardCard(),
-      new GuardCard(),
-      new GuardCard(),
-      new GuardCard(),
-      new GuardCard(),
-      new SpyCard(),
-      new SpyCard()
-    );
+    this.addCards(new PrincessCard(), 1);
+    this.addCards(new CountessCard(), 1);
+    this.addCards(new KingCard(), 1);
+    this.addCards(new ChancellorCard(), 2);
+    this.addCards(new PrinceCard(), 2);
+    this.addCards(new ServantCard(), 2);
+    this.addCards(new BaronCard(), 2);
+    this.addCards(new PriestCard(), 2);
+    this.addCards(new GuardCard(), 6);
+    this.addCards(new SpyCard(), 2);
+  }
+
+  /**
+   * Add a type of card to the deck
+   * @param card type of card
+   * @param count number of cards of this type to add
+   */
+  addCards(card: Card, count: number) {
+    for (let i = 0; i < count; i++) {
+      this.deck.push(card);
+    }
+  }
+
+  /**
+   * Shuffle the deck of cards
+   */
+  shuffleDeck() {
+    for (let i = this.deck.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [this.deck[i], this.deck[j]] = [this.deck[j], this.deck[i]];
+    }
+  }
+
+  /**
+   * Add a player to the game
+   */
+  addPlayer(name: string) {
+    this.players.push(new Player(name, this.deck.splice(0, 2)));
+  }
+
+  /**
+   * Display the players and their cards
+   */
+  displayPlayers() {
+    this.players.forEach((player) => player.toString());
+  }
+
+  /**
+   * Display the number of cards in the deck
+   */
+  displayDeck() {
+    console.log(this.deck.length);
+  }
+
+  /**
+   * Display the number of cards in the discard pile
+   */
+  displayDiscard() {
+    console.log(this.discard.length);
   }
 }
